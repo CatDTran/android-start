@@ -63,8 +63,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView messageTextView;
@@ -96,6 +95,9 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
 
+    private FirebaseAuth mFireBaseAuth;
+    private FirebaseUser mFirebaseUser;
+
     // Firebase instance variables
 
     @Override
@@ -105,6 +107,20 @@ public class MainActivity extends AppCompatActivity
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
+        //Initialize Firebase Auth
+        mFireBaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFireBaseAuth.getCurrentUser();
+        if(mFirebaseUser == null){  //If user is not signed in, take user to Sign In Activity
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+            return;
+        }
+        else{   //If user is already signed in, store username and user photo to local variables
+            mUsername = mFirebaseUser.getDisplayName();
+            if(mFirebaseUser.getPhotoUrl() != null){
+                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+            }
+        }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
