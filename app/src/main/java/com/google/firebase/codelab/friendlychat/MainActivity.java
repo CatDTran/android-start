@@ -198,7 +198,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch(item.getItemId()) {
+            case R.id.sign_out_menu:    //case for when user sign out
+                mFireBaseAuth.signOut();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                mUsername = ANONYMOUS;  //set username to "anonymous" as default when sign out
+                startActivity(new Intent(this, SignInActivity.class));//bring user back to Sign In Activity after signing out
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
