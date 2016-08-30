@@ -108,12 +108,12 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     //--------A helper method: signIn()---------//
-    private void signIn(){
+    private void signIn(){  //Sign in through Google Sign in Api
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     //-------A helper method: firebaseAuthWithGoogle(..)-------//
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct){  //Authenticate with Firebase user data after signed in with Google
         Log.d(TAG, "firebaseAuthWithGoogle: "+ acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),null);
         mFirebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
