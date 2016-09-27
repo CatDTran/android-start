@@ -193,8 +193,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mSendButton = (Button) findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                // Send messages on click.
+            public void onClick(View view) {    // Send messages on click
+                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, mPhotoUrl);
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);//created new JSON child object with the value of friendlyMessage under "messages" location in the database
+                mMessageEditText.setText("");//reset EditText box to empty string after "Send" button is clicked
             }
         });
     }
