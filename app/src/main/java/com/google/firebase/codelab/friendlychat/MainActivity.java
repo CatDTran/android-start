@@ -233,6 +233,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case R.id.invite_menu:
+                sendInvitation();
+                return true;
             case R.id.sign_out_menu:    //case for when user sign out
                 mFireBaseAuth.signOut();
                 Log.d(TAG, "Signed out...");
@@ -246,10 +249,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode = "+ requestCode+ " || resultCode = "+ resultCode);
+        if( requestCode == REQUEST_INVITE){
+            if(resultCode == RESULT_OK){
+                //check how may invitaions were sent
+                String ids[] = AppInviteInvitation.getInvitationIds(resultCode, data);
+                Log.d(TAG, "Invitations sent" + ids.length);
+            }
+            else {
+                Log.d(TAG, "Failed to send invitation");
+            }
+        }
+    }
+
+    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
+    private void sendInvitation(){
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent,REQUEST_INVITE);
+    }
+
 }
