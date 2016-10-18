@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
     private void sendInvitation(){
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                .setMessage(getString(R.string.invitation_message))
+                .setMessage(mUsername + " has invited you to use Friendly Chat app")
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent,REQUEST_INVITE);
