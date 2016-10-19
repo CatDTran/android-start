@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private FirebaseAuth mFireBaseAuth;
     private FirebaseUser mFirebaseUser;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseAdapter;
 
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 mMessageEditText.setText("");//reset EditText box to empty string after "Send" button is clicked
             }
         });
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -254,11 +256,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.d(TAG, "onActivityResult: requestCode = "+ requestCode+ " || resultCode = "+ resultCode);
         if( requestCode == REQUEST_INVITE){
             if(resultCode == RESULT_OK){
+                //Firebase Analytics
+                Bundle payload = new Bundle();
+                payload.putString(FirebaseAnalytics.Param.VALUE, "sent");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
                 //check how may invitaions were sent
                 String ids[] = AppInviteInvitation.getInvitationIds(resultCode, data);
                 Log.d(TAG, "Invitations sent" + ids.length);
             }
             else {
+                //Firebase Analytics
+                Bundle payload = new Bundle();
+                payload.putString(FirebaseAnalytics.Param.VALUE, "not sent");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
                 Log.d(TAG, "Failed to send invitation");
             }
         }
