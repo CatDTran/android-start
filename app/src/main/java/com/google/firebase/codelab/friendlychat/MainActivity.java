@@ -249,6 +249,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case R.id.crash_menu:
+                //FirebaseCrash.logcat(Log.ERROR, TAG, "crash caused");
+                causeCrash();
             case R.id.invite_menu:
                 sendInvitation();
                 return true;
@@ -301,6 +304,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent,REQUEST_INVITE);
+    }
+
+    //Helper Methods
+    private void causeCrash()
+    {
+        throw new NullPointerException("Fake null pointer exception");
     }
 
 }
