@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
 
+    // Firebase instance variables
     private FirebaseAuth mFireBaseAuth;
     private FirebaseUser mFirebaseUser;
     private FirebaseAnalytics mFirebaseAnalytics;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseAdapter;
-
-    // Firebase instance variables
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +201,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mAdView = (AdView) findViewById(R.id.adView);
+        //Request ad to be placed in AdView
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -212,16 +216,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onPause() {
+        if(mAdView!=null){
+            mAdView.pause();
+        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if(mAdView!=null){
+            mAdView.resume();
+        }
+
     }
 
     @Override
     public void onDestroy() {
+        if(mAdView!=null){
+            mAdView.destroy();
+        }
         super.onDestroy();
     }
 
@@ -262,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
                 //check how may invitaions were sent
                 String ids[] = AppInviteInvitation.getInvitationIds(resultCode, data);
-                Log.d(TAG, "Invitations sent" + ids.length);
+                Log.d(TAG, "Number of Invitations sent: " + ids.length);
             }
             else {
                 //Firebase Analytics
